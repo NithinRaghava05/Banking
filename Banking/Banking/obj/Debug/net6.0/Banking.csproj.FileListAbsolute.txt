@@ -1,0 +1,15 @@
+C:\technovert\Banking\Banking\Banking\bin\Debug\net6.0\Banking.exe
+C:\technovert\Banking\Banking\Banking\bin\Debug\net6.0\Banking.deps.json
+C:\technovert\Banking\Banking\Banking\bin\Debug\net6.0\Banking.runtimeconfig.json
+C:\technovert\Banking\Banking\Banking\bin\Debug\net6.0\Banking.dll
+C:\technovert\Banking\Banking\Banking\bin\Debug\net6.0\Banking.pdb
+C:\technovert\Banking\Banking\Banking\obj\Debug\net6.0\Banking.csproj.AssemblyReference.cache
+C:\technovert\Banking\Banking\Banking\obj\Debug\net6.0\Banking.GeneratedMSBuildEditorConfig.editorconfig
+C:\technovert\Banking\Banking\Banking\obj\Debug\net6.0\Banking.AssemblyInfoInputs.cache
+C:\technovert\Banking\Banking\Banking\obj\Debug\net6.0\Banking.AssemblyInfo.cs
+C:\technovert\Banking\Banking\Banking\obj\Debug\net6.0\Banking.csproj.CoreCompileInputs.cache
+C:\technovert\Banking\Banking\Banking\obj\Debug\net6.0\Banking.dll
+C:\technovert\Banking\Banking\Banking\obj\Debug\net6.0\refint\Banking.dll
+C:\technovert\Banking\Banking\Banking\obj\Debug\net6.0\Banking.pdb
+C:\technovert\Banking\Banking\Banking\obj\Debug\net6.0\Banking.genruntimeconfig.cache
+C:\technovert\Banking\Banking\Banking\obj\Debug\net6.0\ref\Banking.dll
