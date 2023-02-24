@@ -10,11 +10,11 @@ namespace Banking.Services
 {
     public class BankServices : IBankServices
     {
-        private BankingSystem bankingSystem;
-        private Bank bank;
-        private AccountServices accountServices;
+        private BankingSystem bankingSystem = new BankingSystem();
+        private Bank bank = new Bank();
+        private AccountServices accountServices = new AccountServices();
 
-        public BankServices(AccountServices accountServices, Bank bank)
+        public BankServices(AccountServices accountServices, Bank bank) 
         {
 
             this.accountServices = accountServices;
@@ -30,35 +30,38 @@ namespace Banking.Services
         {
             Bank bank = new Bank();
             Console.WriteLine("Enter the bank name");
-            string? bankName = Console.ReadLine();
+            string? bankName = Console.ReadLine()!;
             bank.BankId = bankName.Substring(0, 3) + DateTime.Today.Toddmmyyyy();
+            Console.WriteLine("Add a RTGS value");
             bank.RTGS = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine("Add a IMPS value");
             bank.IMPS = Convert.ToInt32(Console.ReadLine());
             bankingSystem.banks.Add(bank);
-
+            Console.WriteLine("Your bank has been created. ID :"+bank.BankId);
         }
 
         public void CreateCustomerAccount()
         {
             Console.WriteLine("Please Enter the bank id you want to open an account in");
-            string? BankID = Console.ReadLine();
+            string? BankID = Console.ReadLine()!;
             Account account = new Account();
             Console.WriteLine("Enter Account holder's name:");
-            string? holderName = Console.ReadLine();
+            string? holderName = Console.ReadLine()!;
             account.AccountId = holderName.Substring(0, 3) + DateTime.Today.Toddmmyyyy();
             Console.WriteLine("Your account id is:" + account.AccountId);
             Console.WriteLine("Enter a password");
             account.Password = Console.ReadLine();
             Console.WriteLine("Enter true if you want to make an opening deposit else false");
-
-            bool openingDeposit = Console.ReadLine() != null;
-            if (openingDeposit)
+            bankingSystem.banks.FirstOrDefault(a => a.BankId == BankID)!.CustomerAccounts.Add(account);
+            string? openingDeposit = Console.ReadLine() ;
+            if (openingDeposit == "true" || openingDeposit == "True")
             {
-                account.Balance = Convert.ToDouble(Console.ReadLine());
+                accountServices.Deposit(account.AccountId, BankID);
             }
-
-            bankingSystem.banks.FirstOrDefault(a => a.BankId == BankID).CustomerAccounts.Add(account);
-
+            else
+            {
+                account.Balance = 0;
+            }
             Console.WriteLine("Your id is:" + account.AccountId + "\nYour password is:" + account.Password);
         }
 
@@ -68,19 +71,19 @@ namespace Banking.Services
             string? BankID = Console.ReadLine();
             Staff staff = new Staff();
             Console.WriteLine("Enter your name:");
-            staff.StaffName = Console.ReadLine();
+            staff.StaffName = Console.ReadLine()!;
             staff.StaffId = staff.StaffName.Substring(0, 3) + DateTime.Today.Toddmmyyyy();
             Console.WriteLine("Your account id is:" + staff.StaffId);
             Console.WriteLine("Enter your password");
             staff.Password = Console.ReadLine();
 
-            bankingSystem.banks.FirstOrDefault(a => a.BankId == BankID).StaffAccounts.Add(staff);
+            bankingSystem.banks.FirstOrDefault(a => a.BankId == BankID)!.StaffAccounts.Add(staff);
 
             Console.WriteLine("Your id is:" + staff.StaffId + "\nYour password is:" + staff.Password);
         }
         public bool IsValidAccount(string? bId, string? aId, string? password)
         {
-            var acc = bankingSystem.banks.FirstOrDefault(b => b.BankId == bId).CustomerAccounts.FirstOrDefault(a => a.AccountId == aId);
+            var acc = bankingSystem.banks.FirstOrDefault(b => b.BankId == bId)!.CustomerAccounts.FirstOrDefault(a => a.AccountId == aId) !;
             if (acc.Password == password)
             {
                 return true;
@@ -90,7 +93,7 @@ namespace Banking.Services
 
         public bool IsValidStaffAccount(string? bId, string? sId, string? password)
         {
-            var acc = bankingSystem.banks.FirstOrDefault(b => b.BankId == bId).StaffAccounts.FirstOrDefault(a => a.StaffId == sId);
+            var acc = bankingSystem.banks.FirstOrDefault(b => b.BankId == bId)!.StaffAccounts.FirstOrDefault(a => a.StaffId == sId)!;
             if (acc.Password == password)
             {
                 return true;
@@ -100,11 +103,11 @@ namespace Banking.Services
         public void CustomerLogin()
         {
             Console.WriteLine("Enter your bank id");
-            string? bID = Console.ReadLine();
+            string? bID = Console.ReadLine()!;
             Console.WriteLine("Enter your account id");
-            string? ID = Console.ReadLine();
+            string? ID = Console.ReadLine()!;
             Console.WriteLine("Enter your account password");
-            string? PW = Console.ReadLine();
+            string? PW = Console.ReadLine()!;
 
             bool Stop = false;
             if (IsValidAccount(bID, ID, PW))
@@ -143,11 +146,11 @@ namespace Banking.Services
         public void StaffLogin()
         {
             Console.WriteLine("Enter your bank id");
-            string? bID = Console.ReadLine();
+            string? bID = Console.ReadLine()!;
             Console.WriteLine("Enter your account id");
-            string? ID = Console.ReadLine();
+            string? ID = Console.ReadLine()!;
             Console.WriteLine("Enter your account password");
-            string? PW = Console.ReadLine();
+            string? PW = Console.ReadLine()!;
 
             bool Stop = false;
             if (IsValidStaffAccount(bID, ID, PW))
@@ -174,6 +177,15 @@ namespace Banking.Services
                             break;
                         case 3:
                             accountServices.DeleteAccount(bID);
+                            break;
+                        case 4:
+                            accountServices.AddCharges(bID);
+                            break;
+                        case 5:
+                            accountServices.AddChargesforDiffBank();
+                            break;
+                        case 6:
+                            accountServices.ViewCustomerTransaction(bID);
                             break;
                     }
                 }

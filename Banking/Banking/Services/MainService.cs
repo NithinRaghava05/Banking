@@ -10,12 +10,12 @@ namespace Banking.Services
     public class MainService
     {
         private IBankServices bankServices;
-        private IAccountServices accountServices;
+        
 
-        public MainService(IBankServices bankServices, IAccountServices accountServices)
+        public MainService(IBankServices bankServices)
         {
             this.bankServices = bankServices;
-            this.accountServices = accountServices;
+           
         }
 
         public void CreateBank()

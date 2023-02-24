@@ -10,7 +10,7 @@ namespace Banking
         {
             Bank bank= new Bank();
             BankingSystem bankingSystem = new BankingSystem();
-            MainService mainService = new MainService(new BankServices(bankingSystem), new AccountServices(bankingSystem));
+            MainService mainService = new MainService(new BankServices(bankingSystem));
 
             bool stop = false;
 

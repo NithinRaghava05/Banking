@@ -14,6 +14,7 @@ namespace Banking.Services
         void GetTransactions(string bankId, string accountId);
         void UpdateAccountDetails(string bankId);
         void DeleteAccount(string bankId);
-
+        void AddCharges(string bankId);
+        void AddChargesforDiffBank();
     }
 }
