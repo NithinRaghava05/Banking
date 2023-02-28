@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Banking.Models;
 
 namespace Banking.Services
 {
     public interface IBankServices
     {
 
-        void CreateBank();
-        void CreateStaffAccount();
+        string CreateBank( Bank bank);
+        string CreateStaffAccount(string BankID, Staff staff);
         void CreateCustomerAccount();
         bool IsValidAccount(string BankId, string accountId, string password);
         bool IsValidStaffAccount(string BankId, string StaffId, string password);

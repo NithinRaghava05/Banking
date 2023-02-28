@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Banking.Models;
 
 namespace Banking.Services
 {
@@ -18,20 +14,14 @@ namespace Banking.Services
            
         }
 
-        public void CreateBank()
-        {
-            bankServices.CreateBank();
-        }
+        public string CreateBank(Bank bank) => bankServices.CreateBank(bank);
 
         public void CreateCustomerAccount()
         {
             bankServices.CreateCustomerAccount();
         }
 
-        public void CreateStaffAccount()
-        {
-            bankServices.CreateStaffAccount();
-        }
+        public string CreateStaffAccount(string? BankID, Staff staff) => bankServices.CreateStaffAccount(BankID, staff);
 
         public void CustomerLogin()
         {

@@ -1,10 +1,5 @@
 ﻿using Banking.Models;
 using Banking.Services.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Banking.Services
 {
@@ -26,28 +21,21 @@ namespace Banking.Services
             this.bankingSystem = bankingSystem;
         }
 
-        public void CreateBank()
-        {
-            try
-            {
-                Bank bank = new Bank();
-                Console.WriteLine("Enter the bank name");
-                string? bankName = Console.ReadLine()!;
-                bank.BankId = bankName.Substring(0, 3) + DateTime.Today.Toddmmyyyy();
-                Console.WriteLine("Add a RTGS value");
-                bank.RTGS = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("Add a IMPS value");
-                bank.IMPS = Convert.ToInt32(Console.ReadLine());
-                bankingSystem.banks.Add(bank);
-                Console.WriteLine("Your bank has been created. ID :" + bank.BankId);
-            }
-            catch (Exception) 
-            {
-                Console.WriteLine("Re-enter");
-                CreateBank();
-            }
+        public string CreateBank(Bank bank)
+        {  
+            bankingSystem.banks.Add(bank);
+            return "Your bank has been created. ID :" + bank.BankId;
+            
         }
 
+        public string CreateStaffAccount(string? BankID, Staff staff)
+        {
+            bankingSystem.banks.FirstOrDefault(a => a.BankId == BankID)!.StaffAccounts.Add(staff);
+
+            return "Your id is:" + staff.StaffId + "\nYour password is:" + staff.Password ;
+
+
+        }
         public void CreateCustomerAccount()
         {
             try
@@ -81,30 +69,7 @@ namespace Banking.Services
             }
         }
 
-        public void CreateStaffAccount()
-        {
-            try
-            {
-                Console.WriteLine("Please Enter the bank id you want to open an account in");
-                string? BankID = Console.ReadLine();
-                Staff staff = new Staff();
-                Console.WriteLine("Enter your name:");
-                staff.StaffName = Console.ReadLine()!;
-                staff.StaffId = staff.StaffName.Substring(0, 3) + DateTime.Today.Toddmmyyyy();
-                Console.WriteLine("Your account id is:" + staff.StaffId);
-                Console.WriteLine("Enter your password");
-                staff.Password = Console.ReadLine();
-
-                bankingSystem.banks.FirstOrDefault(a => a.BankId == BankID)!.StaffAccounts.Add(staff);
-
-                Console.WriteLine("Your id is:" + staff.StaffId + "\nYour password is:" + staff.Password);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine("Re-enter");
-                CreateStaffAccount();
-            }
-        }
+        
         public bool IsValidAccount(string? bId, string? aId, string? password)
         {   
             var acc = bankingSystem.banks.FirstOrDefault(b => b.BankId == bId)!.CustomerAccounts.FirstOrDefault(a => a.AccountId == aId) !;
@@ -141,7 +106,8 @@ namespace Banking.Services
                     Console.WriteLine("1. Deposit");
                     Console.WriteLine("2. Make a transaction");
                     Console.WriteLine("3. Show my transactions");
-                    Console.WriteLine("4. Exit");
+                    Console.WriteLine("4. View Balance");
+                    Console.WriteLine("5. Exit");
                     while (!Stop)
                     {
                         Console.WriteLine("Select your option");
@@ -159,6 +125,9 @@ namespace Banking.Services
                                 accountServices.GetTransactions(bID, ID, bankingSystem);
                                 break;
                             case 4:
+                                Console.WriteLine("Your account balance is:" + bankingSystem.banks.FirstOrDefault(a => a.BankId == bID)!.CustomerAccounts.FirstOrDefault(b => b.AccountId == ID)!.Balance);
+                                break;
+                            case 5:
                                 Stop = true;
                                 break;
                             default:
