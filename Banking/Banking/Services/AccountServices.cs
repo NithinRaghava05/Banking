@@ -252,22 +252,35 @@ namespace Banking.Services
                 Console.WriteLine("Enter your account id");
                 string? AccountId = Console.ReadLine();
 
+                Console.WriteLine("Enter the second account's bank id");
+                string? BankId1 = Console.ReadLine();
+                Console.WriteLine("Enter the second account id");
+                string? AccountId1 = Console.ReadLine();
+
                 var Bank = bankingSystem.banks.FirstOrDefault(a => a.BankId == BankId)!;
                 var Account = Bank.CustomerAccounts.FirstOrDefault(b => b.AccountId == AccountId)!;
+
+                var Bank1 = bankingSystem.banks.FirstOrDefault(c => c.BankId == BankId1)!;
+                var Account1 = Bank1.CustomerAccounts.FirstOrDefault(d => d.AccountId == AccountId1)!;
 
                 Console.WriteLine("Enter the transaction id to be reverted");
                 string? TransactionID = Console.ReadLine();
 
-                var Transaction = Account.Transactions!.FirstOrDefault(c => c.TransactionID == TransactionID);
+                var Transaction = Account.Transactions.FirstOrDefault(e => e.TransactionID == TransactionID)!;
+                var Transaction1 = Account1.Transactions.FirstOrDefault(f => f.TransactionID == TransactionID)!;
+
                 if (Transaction!.SentOrRecieved == "Sent")
                 {
                     Account.Balance += Transaction.amount;
+                    Account1.Balance -= Transaction.amount;
                 }
                 else if (Transaction.SentOrRecieved == "Recieved" || Transaction.SentOrRecieved == "Deposit")
                 {
                     Account.Balance -= Transaction.amount;
+                    Account1.Balance += Transaction.amount;
                 }
-                Account.Transactions!.Remove(Transaction);
+                Account.Transactions.Remove(Transaction);
+                Account1.Transactions.Remove(Transaction1);
 
             }
             catch ( Exception )
