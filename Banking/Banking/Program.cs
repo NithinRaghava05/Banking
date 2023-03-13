@@ -10,7 +10,7 @@ namespace Banking
         public static void Main(string[] args)
         {
             BankingSystem bankingSystem = new BankingSystem();
-            MainService mainService = new MainService(new BankServices(bankingSystem));
+            MainService mainService = new MainService(new BankServices(bankingSystem) , new AccountServices());
 
             bool stop = false;
 
@@ -50,7 +50,7 @@ namespace Banking
                         try
                         {
                             Console.WriteLine("Please Enter the bank id you want to open an account in");
-                            string? BankID = Console.ReadLine();
+                            string BankID = Console.ReadLine()!;
                             Staff staff = new Staff();
                             Console.WriteLine("Enter your name:");
                             staff.StaffName = Console.ReadLine()!;
@@ -67,10 +67,98 @@ namespace Banking
                         
                         break;
                     case 3:
-                        mainService.CreateCustomerAccount();
+                        try
+                        {
+                            Console.WriteLine("Please Enter the bank id you want to open an account in");
+                            string? BankID = Console.ReadLine()!;
+                            Account account = new Account();
+                            Console.WriteLine("Enter Account holder's name:");
+                            string? holderName = Console.ReadLine()!;
+                            account.AccountId = holderName.Substring(0, 3) + DateTime.Today.Toddmmyyyy();
+                            Console.WriteLine("Enter a password");
+                            account.Password = Console.ReadLine();
+
+                            Console.WriteLine("Enter true if you want to make an opening deposit else false");                            
+                            string openingDeposit = Console.ReadLine()!;                            
+                            Console.WriteLine(mainService.CreateCustomerAccount(BankID, account, openingDeposit));
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Wrong details");
+                        }
+                        
                         break;
                     case 4:
-                        mainService.StaffLogin();
+                        try
+                        {
+                            Console.WriteLine("Enter your bank id");
+                            string? bID = Console.ReadLine()!;
+                            Console.WriteLine("Enter your account id");
+                            string? ID = Console.ReadLine()!;
+                            Console.WriteLine("Enter your account password");
+                            string? PW = Console.ReadLine()!;
+
+                            bool Stop = false;
+                            if (mainService.IsValidStaffAccount(bID, ID, PW))
+                            {
+                                Console.WriteLine("1. Create a customer account");
+                                Console.WriteLine("2. Update account details");
+                                Console.WriteLine("3. Delete an account");
+                                Console.WriteLine("4. Add service charges");
+                                Console.WriteLine("5. Add charges for a bank");
+                                Console.WriteLine("6. View customer's account transaction history");
+                                Console.WriteLine("7. Revert a transaction");
+
+                                while (!Stop)
+                                {
+                                    Console.WriteLine("Select an option");
+                                    int Option = Convert.ToInt32(Console.ReadLine());
+                                    switch (Option)
+                                    {
+                                        case 1:
+                                            Console.WriteLine("Please Enter the bank id you want to open an account in");
+                                            string? BankID = Console.ReadLine()!;
+                                            Account account = new Account();
+                                            Console.WriteLine("Enter Account holder's name:");
+                                            string? holderName = Console.ReadLine()!;
+                                            account.AccountId = holderName.Substring(0, 3) + DateTime.Today.Toddmmyyyy();
+                                            Console.WriteLine("Enter a password");
+                                            account.Password = Console.ReadLine();
+                                            Console.WriteLine("Enter true if you want to make an opening deposit else false");
+                                            string? openingDeposit = Console.ReadLine();
+                                            //   Console.WriteLine(mainService.CreateCustomerAccount(BankID, account, openingDeposit));
+                                            break;
+                                        case 2:
+                                            mainService.UpdateAccountDetails(bID, bankingSystem);
+                                            break;
+                                        case 3:
+                                            mainService.DeleteAccount(bID, bankingSystem);
+                                            break;
+                                        case 4:
+                                            mainService.AddCharges(bID, bankingSystem);
+                                            break;
+                                        case 5:
+                                            mainService.AddChargesforDiffBank(bankingSystem);
+                                            break;
+                                        case 6:
+                                            mainService.ViewCustomerTransaction(bID, bankingSystem);
+                                            break;
+                                        case 7:
+                                            mainService.RevertTransaction(bID, bankingSystem);
+                                            break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid Account");
+                                
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Re-enter");
+                        }
                         break;
                     case 5:
                         mainService.CustomerLogin();

@@ -7,11 +7,11 @@ namespace Banking.Services
 
         string CreateBank( Bank bank);
         string CreateStaffAccount(string BankID, Staff staff);
-        void CreateCustomerAccount();
+        string CreateCustomerAccount(string BankID, Account account, string openingDeposit);
         bool IsValidAccount(string BankId, string accountId, string password);
         bool IsValidStaffAccount(string BankId, string StaffId, string password);
         void CustomerLogin();
-        void StaffLogin();
+       
         
         
     }

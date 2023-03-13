@@ -12,6 +12,7 @@ namespace Banking.Services
         void DeleteAccount(string bankId, BankingSystem bankingSystem);
         void AddCharges(string bankId, BankingSystem bankingSystem);
         void AddChargesforDiffBank( BankingSystem bankingSystem);
+        void ViewCustomerTransaction(string bankID, BankingSystem bankingSystem);
         void RevertTransaction(string bankId, BankingSystem bankingSystem);
     }
 }
