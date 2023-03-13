@@ -23,11 +23,6 @@ namespace Banking.Services
 
         public string CreateStaffAccount(string BankID, Staff staff) => bankServices.CreateStaffAccount(BankID, staff);
 
-        public void CustomerLogin()
-        {
-            bankServices.CustomerLogin();
-        }
-
         public bool IsValidStaffAccount(string bankID, string accountID, string password)
         {
             return bankServices.IsValidStaffAccount(bankID, accountID, password);
@@ -61,6 +56,26 @@ namespace Banking.Services
         public void RevertTransaction(string bankID, BankingSystem bankingSystem)
         {
             accountServices.RevertTransaction(bankID, bankingSystem);
+        }
+
+        public bool IsValidAccount(string bankID, string accountID, string password)
+        {
+            return bankServices.IsValidAccount(bankID, accountID, password);
+        }
+
+        public string Deposit(string accountID, string bankID, BankingSystem bankingSystem, double depositAmount)
+        {
+            return accountServices.Deposit(accountID, bankID, bankingSystem, depositAmount);
+        }
+
+        public string Transaction(string accountID, string bankID, BankingSystem bankingSystem, string RecivingBank, string TransferAccount, double amount)
+        {
+            return accountServices.Transaction(accountID, bankID, bankingSystem, RecivingBank, TransferAccount, amount);
+        }
+
+        public string[] GetTransactions(string bankId, string accountID, BankingSystem bankingSystem)
+        {
+            return accountServices.GetTransactions(bankId, accountID, bankingSystem);
         }
     }
 }

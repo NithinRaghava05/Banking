@@ -5,9 +5,9 @@ namespace Banking.Services
     public interface IAccountServices
     {
 
-        void Deposit(string accountId, string bankId, BankingSystem bankingSystem);
-        void Transaction(string accountId, string bankId, BankingSystem bankingSystem);
-        void GetTransactions(string bankId, string accountId, BankingSystem bankingSystem);
+        string Deposit(string accountId, string bankId, BankingSystem bankingSystem, double depositAmount);
+        string Transaction(string accountId, string bankId, BankingSystem bankingSystem, string RecivingBank, string TransferAccount, double amount);
+        string[] GetTransactions(string bankId, string accountId, BankingSystem bankingSystem);
         void UpdateAccountDetails(string bankId, BankingSystem bankingSystem);
         void DeleteAccount(string bankId, BankingSystem bankingSystem);
         void AddCharges(string bankId, BankingSystem bankingSystem);

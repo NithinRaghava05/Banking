@@ -6,19 +6,8 @@ namespace Banking.Services
     public class AccountServices : IAccountServices
     {
 
-        //private BankingSystem bankingSystem;
-
-        //public AccountServices()
-        //{
-            
-        //    this.bankingSystem = new BankingSystem();
-        //}
-
-        public void Deposit(string aID, string bID, BankingSystem bankingSystem)
-        {
-
-            Console.WriteLine("Enter the amount to be deposited:");
-            double depositAmount = Convert.ToDouble(Console.ReadLine());
+        public string Deposit(string aID, string bID, BankingSystem bankingSystem, double depositAmount)
+        {   
             try
             {  
 
@@ -34,67 +23,56 @@ namespace Banking.Services
                 transaction.SentOrRecieved = "Deposit";
 
                 Account.Transactions.Add(transaction);
+
+                return "Amount Deposited";
             }
             catch (Exception) 
             {
-                Console.WriteLine("Enter a valid deposit amount");
-                Deposit( aID, bID, bankingSystem);
+                return "Enter a valid deposit amount";
             }
                     
         }
 
-        public void Transaction(string aID, string bID, BankingSystem bankingSystem)
+        public string Transaction(string aID, string bID, BankingSystem bankingSystem, string RecievingBank, string TransferAccount, double amount)
         {
-            try
+            var SenderAccount = bankingSystem.banks.FirstOrDefault(b => b.BankId == bID)!.CustomerAccounts.FirstOrDefault(a => a.AccountId == aID)!;
+            var RecieverAccount = bankingSystem.banks.FirstOrDefault(c => c.BankId == RecievingBank)!.CustomerAccounts.FirstOrDefault(d => d.AccountId == TransferAccount)!;
+            if (SenderAccount.Balance >= amount)
             {
-                Console.WriteLine("Enter the recievers bank id");
-                string? RecievingBank = Console.ReadLine()!;
-                Console.WriteLine("Enter the account id to transfer");
-                string? TransferAccount = Console.ReadLine()!;
-                Console.WriteLine("Enter the amount to be transfered");
-                double amount = Convert.ToDouble(Console.ReadLine());
+                SenderAccount.Balance -= amount;
+                RecieverAccount.Balance += amount;
+                Transaction transaction = new Transaction();
+                transaction.amount = amount;
 
-                var SenderAccount = bankingSystem.banks.FirstOrDefault(b => b.BankId == bID)!.CustomerAccounts.FirstOrDefault(a => a.AccountId == aID)!;
-                var RecieverAccount = bankingSystem.banks.FirstOrDefault(c => c.BankId == RecievingBank)!.CustomerAccounts.FirstOrDefault(d => d.AccountId == TransferAccount)!;
-                if (SenderAccount.Balance >= amount)
-                {
-                    SenderAccount.Balance -= amount;
-                    RecieverAccount.Balance += amount;
-                    Transaction transaction = new Transaction();
-                    transaction.amount = amount;
+                // Creating Sender's Transaction Id
+                transaction.TransactionID = TransactionIDExtension.GenerateTransactionID(bID, aID);
+                transaction.SentOrRecieved = "Sent";
+                SenderAccount.Transactions.Add(transaction);
 
-                    // Creating Sender's Transaction Id
-                    transaction.TransactionID = TransactionIDExtension.GenerateTransactionID(bID, aID);
-                    transaction.SentOrRecieved = "Sent";
-                    SenderAccount.Transactions.Add(transaction);
+                // Creating Reciever's Transaction Id
+                transaction.TransactionID = TransactionIDExtension.GenerateTransactionID(RecievingBank, TransferAccount);
+                transaction.SentOrRecieved = "Recieved";
+                RecieverAccount.Transactions.Add(transaction);
 
-                    // Creating Reciever's Transaction Id
-                    transaction.TransactionID = TransactionIDExtension.GenerateTransactionID(RecievingBank, TransferAccount);
-                    transaction.SentOrRecieved = "Recieved";
-                    RecieverAccount.Transactions.Add(transaction);
-                }
-                else
-                {
-                    Console.WriteLine("Amount not sufficient.\n Available balance =" + SenderAccount.Balance);
-                    Console.WriteLine("Enter the correct amount");
-                    Transaction(aID, bID, bankingSystem);
-                }
+                return "transaction successful";
             }
-            catch (Exception) 
-            { 
-                Console.WriteLine("Re-enter");
-                Transaction(aID, bID, bankingSystem);
+            else
+            {
+                return "Amount not sufficient.\n Available balance =" + SenderAccount.Balance;
             }
         }
 
-        public void GetTransactions(string BankId, string AccountId, BankingSystem bankingSystem)
+        public string[] GetTransactions(string BankId, string AccountId, BankingSystem bankingSystem)
         {
             var accounts = bankingSystem.banks.FirstOrDefault(a => a.BankId == BankId)!.CustomerAccounts.FirstOrDefault(b => b.AccountId == AccountId)!.Transactions!;
-
+            string[] transactionList = new string[accounts.Count];
             for( int i = 0; i < accounts.Count; i++ )
             {
-                Console.WriteLine( i+1 + accounts[i].TransactionID + accounts[i].SentOrRecieved + accounts[i].amount );
+                string x = i+1 . ToString();
+                string y = accounts[i].amount .ToString();
+                transactionList.Append( x + accounts[i].TransactionID + accounts[i].SentOrRecieved + y);
             }
+            return transactionList;
         }
 
         public void UpdateAccountDetails(string BankID, BankingSystem bankingSystem)

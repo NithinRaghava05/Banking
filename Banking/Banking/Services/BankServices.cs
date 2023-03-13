@@ -43,7 +43,9 @@ namespace Banking.Services
             account.Balance = 0;
             if (openingDeposit.ToLower() == "true")
             {
-                accountServices.Deposit(account.AccountId, BankID, bankingSystem);
+                Console.WriteLine("Enter the amount to be deposited:");
+                double depositAmount = Convert.ToDouble(Console.ReadLine());
+                accountServices.Deposit(account.AccountId, BankID, bankingSystem, depositAmount);
             }
             return "Your id is:" + account.AccountId + "\nYour password is:" + account.Password;
         }
@@ -68,66 +70,5 @@ namespace Banking.Services
             }
             return false;
         }
-        public void CustomerLogin()
-        {
-            try
-            {
-                Console.WriteLine("Enter your bank id");
-                string? bID = Console.ReadLine()!;
-                Console.WriteLine("Enter your account id");
-                string? ID = Console.ReadLine()!;
-                Console.WriteLine("Enter your account password");
-                string? PW = Console.ReadLine()!;
-
-                bool Stop = false;
-                if (IsValidAccount(bID, ID, PW))
-                {
-                    Console.WriteLine("1. Deposit");
-                    Console.WriteLine("2. Make a transaction");
-                    Console.WriteLine("3. Show my transactions");
-                    Console.WriteLine("4. View Balance");
-                    Console.WriteLine("5. Exit");
-                    while (!Stop)
-                    {
-                        Console.WriteLine("Select your option");
-                        int option = Convert.ToInt32(Console.ReadLine());
-
-                        switch (option)
-                        {
-                            case 1:
-                                accountServices.Deposit(ID, bID, bankingSystem);
-                                break;
-                            case 2:
-                                accountServices.Transaction(ID, bID, bankingSystem);
-                                break;
-                            case 3:
-                                accountServices.GetTransactions(bID, ID, bankingSystem);
-                                break;
-                            case 4:
-                                Console.WriteLine("Your account balance is:" + bankingSystem.banks.FirstOrDefault(a => a.BankId == bID)!.CustomerAccounts.FirstOrDefault(b => b.AccountId == ID)!.Balance);
-                                break;
-                            case 5:
-                                Stop = true;
-                                break;
-                            default:
-                                Console.WriteLine("Enter a valid option");
-                                break;
-                        }
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("Invalid Account. Please Re-enter");
-                    CustomerLogin();
-                }
-            }
-            catch (Exception) 
-            {
-                Console.WriteLine("Re-enter");
-                CustomerLogin();
-            }
-        }
-
-       
     }
 }

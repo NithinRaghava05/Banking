@@ -1,6 +1,7 @@
 ﻿using Banking.Models;
 using Banking.Services;
 using Banking.Services.Extensions;
+using System.Security.Cryptography;
 
 
 namespace Banking
@@ -125,8 +126,9 @@ namespace Banking
                                             Console.WriteLine("Enter a password");
                                             account.Password = Console.ReadLine();
                                             Console.WriteLine("Enter true if you want to make an opening deposit else false");
-                                            string? openingDeposit = Console.ReadLine();
-                                            //   Console.WriteLine(mainService.CreateCustomerAccount(BankID, account, openingDeposit));
+                                            string openingDeposit = Console.ReadLine()!;
+
+                                            Console.WriteLine(mainService.CreateCustomerAccount(BankID, account, openingDeposit));
                                             break;
                                         case 2:
                                             mainService.UpdateAccountDetails(bID, bankingSystem);
@@ -151,8 +153,7 @@ namespace Banking
                             }
                             else
                             {
-                                Console.WriteLine("Invalid Account");
-                                
+                                Console.WriteLine("Invalid Account");                               
                             }
                         }
                         catch (Exception)
@@ -161,7 +162,83 @@ namespace Banking
                         }
                         break;
                     case 5:
-                        mainService.CustomerLogin();
+                        try
+                        {
+                            Console.WriteLine("Enter your bank id");
+                            string? bID = Console.ReadLine()!;
+                            Console.WriteLine("Enter your account id");
+                            string? ID = Console.ReadLine()!;
+                            Console.WriteLine("Enter your account password");
+                            string? PW = Console.ReadLine()!;
+
+                            bool Stop = false;
+                            if (mainService.IsValidAccount(bID, ID, PW))
+                            {
+                                Console.WriteLine("1. Deposit");
+                                Console.WriteLine("2. Make a transaction");
+                                Console.WriteLine("3. Show my transactions");
+                                Console.WriteLine("4. View Balance");
+                                Console.WriteLine("5. Exit");
+                                while (!Stop)
+                                {
+                                    Console.WriteLine("Select your option");
+                                    int option = Convert.ToInt32(Console.ReadLine());
+
+                                    switch (option)
+                                    {
+                                        case 1:
+                                            Console.WriteLine("Enter the amount to be deposited:");
+                                            double depositAmount = Convert.ToDouble(Console.ReadLine());
+                                            Console.WriteLine(mainService.Deposit(ID, bID, bankingSystem, depositAmount));
+                                            break;
+                                        case 2:
+                                            try
+                                            {
+                                                Console.WriteLine("Enter the recievers bank id");
+                                                string? RecievingBank = Console.ReadLine()!;
+                                                Console.WriteLine("Enter the account id to transfer");
+                                                string? TransferAccount = Console.ReadLine()!;
+                                                Console.WriteLine("Enter the amount to be transfered");
+                                                double amount = Convert.ToDouble(Console.ReadLine());
+
+                                                mainService.Transaction(ID, bID, bankingSystem,RecievingBank,TransferAccount,amount);
+                                            }
+                                            catch (Exception)
+                                            {
+                                                Console.WriteLine("Re-enter");                                                
+                                            }
+                                            
+                                            break;
+                                        case 3:
+                                            string[] transactionList = mainService.GetTransactions(bID, ID, bankingSystem);
+                                            for (int i = 0; i < transactionList.Count(); i++ )
+                                            {
+                                                Console.WriteLine($"{transactionList[i]}");
+                                            }
+                                            break;
+                                        case 4:
+                                            Console.WriteLine("Your account balance is:" + bankingSystem.banks.FirstOrDefault(a => a.BankId == bID)!.CustomerAccounts.FirstOrDefault(b => b.AccountId == ID)!.Balance);
+                                            break;
+                                        case 5:
+                                            Stop = true;
+                                            break;
+                                        default:
+                                            Console.WriteLine("Enter a valid option");
+                                            break;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid Account. Please Re-enter");
+                                
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Re-enter");
+                            
+                        }                        
                         break;
                     case 6:
                         stop= true;

@@ -10,7 +10,6 @@ namespace Banking.Services
         string CreateCustomerAccount(string BankID, Account account, string openingDeposit);
         bool IsValidAccount(string BankId, string accountId, string password);
         bool IsValidStaffAccount(string BankId, string StaffId, string password);
-        void CustomerLogin();
        
         
         
