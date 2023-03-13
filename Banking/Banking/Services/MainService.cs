@@ -28,8 +28,6 @@ namespace Banking.Services
             bankServices.CustomerLogin();
         }
 
-       
-
         public bool IsValidStaffAccount(string bankID, string accountID, string password)
         {
             return bankServices.IsValidStaffAccount(bankID, accountID, password);
